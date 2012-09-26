@@ -1,20 +1,23 @@
+--
+-- riak demo
+--
 local function networkListener( event )
   if ( event.isError ) then
-  	if event.status ~=nil then
+    if event.status ~=nil then
     print( "Network error!:"..event.status)
     else
       print( "Network error!")
     end
   else
    --print ( "STATUS:"..event.status.." RESPONSE: " .. event.response )
-	  parser = require("simpleMultipart")
-		aMIME = parser.MIME()
-		aMIME(event.response)
-	  for i=1, #parser.Riak do
-	  	for k, v in pairs (parser.Riak[i]) do
-	     print("["..i.."]"..k..":"..v)
-	    end
-	  end
+    parser = require("simpleMultipart")
+    aMIME = parser.MIME()
+    aMIME(event.response)
+    for i=1, #parser.Riak do
+      for k, v in pairs (parser.Riak[i]) do
+       print("["..i.."]"..k..":"..v)
+      end
+    end
   end
 end
 --
@@ -34,7 +37,7 @@ local params = {headers={}}
   -- Put
   network.request("http://localhost:8091/riak/artists/"..artists.name, "PUT", networkListener,  params)
 
-	--GET
+  --GET
   params.body=nil
   network.request("http://localhost:8091/riak/artists/"..artists.name, "GET", networkListener,  params)
  
@@ -62,10 +65,10 @@ local params = {headers={}}
   network.request("http://localhost:8091/riak/artists/Clarence", "PUT", networkListener,  params)
 
   -- collaborator Steve
-	params.headers["Content-Type"] = "text/plain"
-	params.headers["Link"] = '</riak/artists/Bruce>; riaktag="collaborator"'
-	params.body = "Steve Data"
-	network.request("http://localhost:8091/riak/artists/Steve", "PUT", networkListener,  params)
+  params.headers["Content-Type"] = "text/plain"
+  params.headers["Link"] = '</riak/artists/Bruce>; riaktag="collaborator"'
+  params.body = "Steve Data"
+  network.request("http://localhost:8091/riak/artists/Steve", "PUT", networkListener,  params)
   
   --update link for Bruce
   params.headers["Content-Type"] = "Content-Type: application/json"
